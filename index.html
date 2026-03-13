@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine & 1 tháng bên nhau</title>
+    <meta
+      name="description"
+      content="Trang nhỏ xinh kỷ niệm Valentine và 1 tháng tụi mình yêu nhau."
+    />
+    <meta name="theme-color" content="#ffd0e5" />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+      :root {
+        --bg1: #fff5e4;
+        --bg2: #ffe3e1;
+        --accent: #ff5f9e;
+        --accent2: #ff9494;
+        --text: #2f2222;
+        --muted: rgba(47, 34, 34, 0.7);
+        --card: rgba(255, 255, 255, 0.9);
+        --stroke: rgba(255, 95, 158, 0.25);
+        --shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+        --radius: 22px;
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        color: var(--text);
+        background: radial-gradient(
+          1200px 600px at 50% 0%,
+          var(--bg2),
+          var(--bg1)
+        );
+      }
+
+      .page {
+        width: 100%;
+        max-width: 960px;
+        padding: 24px 16px 32px;
+      }
+
+      .card {
+        margin: 0 auto;
+        max-width: 720px;
+        padding: 24px 18px 26px;
+        border-radius: var(--radius);
+        border: 1px solid var(--stroke);
+        box-shadow: var(--shadow);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.95),
+          rgba(255, 255, 255, 0.84)
+        );
+        text-align: center;
+      }
+
+      .heading {
+        font-size: clamp(24px, 5vw, 30px);
+        margin: 4px 0 8px;
+        line-height: 1.25;
+      }
+
+      .highlight {
+        color: var(--accent);
+        font-weight: 800;
+      }
+
+      .subtitle {
+        margin: 0 auto;
+        max-width: 520px;
+        font-size: 15px;
+        color: var(--muted);
+      }
+
+      .heart-divider {
+        margin: 16px auto 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .heart-divider::before,
+      .heart-divider::after {
+        content: "";
+        display: block;
+        width: 54px;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 95, 158, 0.6)
+        );
+      }
+
+      .heart-divider::after {
+        background: linear-gradient(
+          90deg,
+          rgba(255, 95, 158, 0.6),
+          transparent
+        );
+      }
+
+      .content-layout {
+        display: grid;
+        grid-template-columns: 1.1fr 1.1fr;
+        gap: 18px;
+        margin-top: 10px;
+      }
+
+      @media (max-width: 680px) {
+        .content-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        padding: 14px 12px 16px;
+        border-radius: 18px;
+        border: 1px solid rgba(255, 95, 158, 0.28);
+        background: rgba(255, 255, 255, 0.92);
+      }
+
+      .panel-title {
+        margin: 0 0 6px;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .panel-body {
+        font-size: 14px;
+        color: var(--muted);
+        text-align: left;
+      }
+
+      .panel-body strong {
+        color: var(--accent);
+      }
+
+      .photo-block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .photo {
+        width: min(260px, 80vw);
+        border-radius: 18px;
+        box-shadow: 0 18px 32px rgba(0, 0, 0, 0.14);
+      }
+
+      .photo-caption {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .actions {
+        margin-top: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .btn {
+        min-width: 150px;
+        padding: 12px 18px;
+        border-radius: 18px;
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 15px;
+        transition: transform 0.12s ease, box-shadow 0.12s ease,
+          background 0.12s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .btn:active {
+        transform: scale(0.97);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: #fff;
+        box-shadow: 0 14px 24px rgba(255, 95, 158, 0.3);
+      }
+
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.9);
+        color: var(--accent);
+        border: 1px solid rgba(255, 95, 158, 0.35);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+      }
+
+      .btn-primary.grow {
+        animation: gentle-bounce 1.6s ease-in-out infinite;
+      }
+
+      @keyframes gentle-bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-4px);
+        }
+      }
+
+      .no-note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .tip {
+        margin-top: 12px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .tip span {
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      .timeline {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        border: 1px dashed rgba(255, 95, 158, 0.5);
+        font-size: 13px;
+        text-align: left;
+      }
+
+      .timeline ul {
+        margin: 6px 0 0;
+        padding-left: 18px;
+      }
+
+      .timeline li + li {
+        margin-top: 2px;
+      }
+
+      .timeline-label {
+        font-weight: 600;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .float-heart {
+        position: fixed;
+        bottom: -24px;
+        pointer-events: none;
+        animation: float-up 3.2s ease-in forwards;
+        opacity: 0.95;
+        z-index: 10;
+      }
+
+      @keyframes float-up {
+        0% {
+          transform: translateY(0);
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-110vh);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <section class="card" aria-labelledby="main-heading">
+        <h1 id="main-heading" class="heading">
+          <span class="highlight" id="partnerName">Em yêu</span>, em cùng đón Valentine với anh nha? 💘
+        </h1>
+        <p class="subtitle">
+          Hôm nay không chỉ là
+          <strong>Valentine</strong>, mà còn là kỷ niệm
+          <strong>1 tháng tụi mình chính thức bên nhau</strong>. Anh muốn lưu
+          lại khoảnh khắc nhỏ xíu này cho riêng hai đứa mình.
+        </p>
+
+        <div class="heart-divider">1 tháng đầu tiên của tụi mình</div>
+
+        <div class="content-layout">
+          <div class="panel">
+            <h2 class="panel-title">Lời nhắn gửi em 💌</h2>
+            <div class="panel-body" id="loveNote">
+              1 tháng không quá dài, nhưng đủ để anh biết rằng
+              <strong>anh nhớ em mỗi ngày</strong>, từ những tin nhắn nhỏ xíu
+              cho tới những lần gọi nhau khuya. Anh mong là sau này, khi nhìn
+              lại tụi mình sẽ cười vì:
+              <strong>“Ủa, mới đó mà đã đi cùng nhau xa vậy rồi hả?”</strong>
+
+              <div class="timeline">
+                <ul>
+                  <li>
+                    <span class="timeline-label">Ngày bắt đầu nói chuyện:</span>
+                    <span id="firstTalk">...</span>
+                  </li>
+                  <li>
+                    <span class="timeline-label">Chính thức bên nhau:</span>
+                    <span id="officialDate">...</span>
+                  </li>
+                  <li>
+                    <span class="timeline-label">Tròn 1 tháng yêu nhau:</span>
+                    <span id="anniversaryToday">...</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel photo-block">
+            <img
+              id="photo"
+              class="photo"
+              src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzZlenFvcXl1aXh6bTdtZ3N1ZDF6ZXFna2k3dmw5NWYzNGJ3eGZxMiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qxS1V1N9V5W9C/giphy.gif"
+              alt="Mèo dễ thương cầm hoa"
+            />
+            <p class="photo-caption" id="photoCaption">
+              Nếu em lỡ nhấn “Không”, anh vẫn sẽ ráng níu lại bằng hết mấy trái
+              tim này. 💗
+            </p>
+          </div>
+        </div>
+
+        <div class="actions" id="actions">
+          <button id="yesButton" class="btn btn-primary grow" type="button">
+            <span>Dạ, đồng ý 💖</span>
+          </button>
+          <div>
+            <button id="noButton" class="btn btn-ghost" type="button">
+              Không 🙈
+            </button>
+            <div class="no-note">(Nhấn thử vài lần cũng được…)</div>
+          </div>
+        </div>
+
+        <p class="tip">
+          <span>Gợi ý:</span> Sau khi em bấm “Dạ, đồng ý 💖”, nhớ chụp lại màn
+          hình gửi cho anh nha.
+        </p>
+      </section>
+    </main>
+
+    <script>
+      const CONFIG = {
+        partnerName: "Em yêu",
+        firstTalkDate: "01/02/2026",
+        officialDate: "13/02/2026",
+        anniversaryDate: "13/03/2026",
+      };
+
+      const partnerNameEl = document.getElementById("partnerName");
+      const firstTalkEl = document.getElementById("firstTalk");
+      const officialDateEl = document.getElementById("officialDate");
+      const anniversaryEl = document.getElementById("anniversaryToday");
+      const yesButton = document.getElementById("yesButton");
+      const noButton = document.getElementById("noButton");
+      const actions = document.getElementById("actions");
+      const photo = document.getElementById("photo");
+      const photoCaption = document.getElementById("photoCaption");
+
+      partnerNameEl.textContent = CONFIG.partnerName;
+      firstTalkEl.textContent = CONFIG.firstTalkDate;
+      officialDateEl.textContent = CONFIG.officialDate;
+      anniversaryEl.textContent = CONFIG.anniversaryDate;
+
+      const NO_MESSAGES = [
+        "Không 🙈",
+        "Em chắc vậy luôn hả…? 🥺",
+        "Suy nghĩ lại xíu đi mà…",
+        "Anh buồn thật đó… 😣",
+        "Tim anh hơi nhói rồi đó 💔",
+        "Thôi, cho anh 1 cơ hội nhaaa 😭",
+      ];
+
+      const PHOTO_STATES = [
+        {
+          src: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzZlenFvcXl1aXh6bTdtZ3N1ZDF6ZXFna2k3dmw5NWYzNGJ3eGZxMiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/qxS1V1N9V5W9C/giphy.gif",
+          alt: "Mèo dễ thương cầm hoa",
+        },
+        {
+          src: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWpobXJ6d3kwNmE4M3NiZGlyYzZtdWN0b2o1eHdncnJ5Y2t3bXc2cSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/CjmvTCZf2U3p09Cn0h/giphy.gif",
+          alt: "Mèo nhìn em mong chờ",
+        },
+        {
+          src: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXNzeGZ5d3BzNjU0eTh5YzFneGxkbzZqeGU3czB2eGoyNm9kc3ZxZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/9Y5BbDSkSTiY8/giphy.gif",
+          alt: "Mèo hơi buồn buồn",
+        },
+        {
+          src: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExb2FwNmplYjZ5YjhzZ2JpN3ZhaXFyN2RoZ2NkbjE4ZWRqYWJvZDhvZiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l4FGuhL4U2WyjdkaY/giphy.gif",
+          alt: "Mèo ôm tim to",
+        },
+      ];
+
+      let noClickCount = 0;
+      let yesFontSize = 15;
+
+      function spawnHearts() {
+        const icons = ["💖", "💕", "💗", "💓", "✨", "🌸"];
+        for (let i = 0; i < 7; i++) {
+          const h = document.createElement("div");
+          h.className = "float-heart";
+          h.textContent = icons[Math.floor(Math.random() * icons.length)];
+          h.style.left = Math.random() * 100 + "vw";
+          h.style.fontSize = 14 + Math.random() * 18 + "px";
+          h.style.animationDelay = Math.random() * 0.4 + "s";
+          document.body.appendChild(h);
+          setTimeout(() => h.remove(), 3300);
+        }
+      }
+
+      noButton.addEventListener("click", () => {
+        if (noClickCount < NO_MESSAGES.length - 1) {
+          noClickCount++;
+        }
+
+        yesFontSize += 2.5;
+        yesButton.style.fontSize = yesFontSize + "px";
+
+        noButton.textContent =
+          NO_MESSAGES[noClickCount] || NO_MESSAGES[NO_MESSAGES.length - 1];
+
+        const state =
+          PHOTO_STATES[Math.min(noClickCount, PHOTO_STATES.length - 1)];
+        photo.src = state.src;
+        photo.alt = state.alt;
+
+        spawnHearts();
+      });
+
+      yesButton.addEventListener("click", () => {
+        actions.classList.add("hidden");
+
+        photo.src =
+          "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMTVjZ2pkZmllcXM2ODBocWxtNjc3dmE4NnZpMnpyemkybWtybThjZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/l0MYt5jPR6QX5pnqM/giphy.gif";
+        photo.alt = "Mèo ôm nhau hạnh phúc";
+        photoCaption.textContent =
+          "Từ giờ trở đi, Valentine nào anh cũng muốn hẹn với em trước. 💞";
+
+        if (window.confetti && typeof window.confetti.shapeFromPath === "function") {
+          const heart = window.confetti.shapeFromPath({
+            path: "M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z",
+          });
+
+          const base = {
+            spread: 360,
+            ticks: 100,
+            gravity: 0.9,
+            decay: 0.93,
+            startVelocity: 25,
+            shapes: [heart],
+            colors: ["#ff69b4", "#ff1493", "#ff6b81", "#e84393"],
+          };
+
+          window.confetti({ ...base, particleCount: 60, scalar: 2 });
+          window.confetti({ ...base, particleCount: 30, scalar: 3 });
+        } else if (window.confetti) {
+          window.confetti({
+            spread: 90,
+            particleCount: 120,
+            origin: { y: 0.6 },
+            colors: ["#ff69b4", "#ff1493", "#ff6b81", "#e84393"],
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
+
